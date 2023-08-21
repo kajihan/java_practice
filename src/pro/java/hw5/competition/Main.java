@@ -23,15 +23,15 @@ public class Main {
     obstacles.add(runOne);
     obstacles.add(wallOne);
 
-    for (Player name : players) {
+    for (Player player : players) {
 
       for (Obstacle item : obstacles) {
 
         if (item.getClass().getName().contains("Treadmill")) {
-          System.out.printf(name.run() + item.overcome(name.getLength()));
+          System.out.printf(player.run() + item.overcome(player.getLength()));
 
         } else {
-          System.out.printf(name.jump() + item.overcome(name.getHeight()));
+          System.out.printf(player.jump() + item.overcome(player.getHeight()));
         }
       }
     }
