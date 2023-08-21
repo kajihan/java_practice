@@ -4,6 +4,6 @@ public class Wall extends Obstacle {
 
   @Override
   public String overcome(int range) {
-    return "стену высотой" + " " + range + " " + "метров" + "\n";
+    return "стену высотой" + " " + range + " " + "метров";
   }
 }
