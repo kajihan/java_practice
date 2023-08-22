@@ -27,4 +27,9 @@ public abstract class Player {
   public abstract String run();
 
   public abstract String jump();
+
+  public abstract boolean isPassRunObstacle();
+
+  public abstract boolean isPassJumpObstacle();
+
 }

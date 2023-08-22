@@ -7,20 +7,22 @@ import java.util.Random;
 public class Main {
 
   private static final Random random = new Random();
+  private static final String ANSI_RED = "\u001B[31m";
+  private static final String ANSI_GREEN = "\u001B[32m";
 
   public static void main(String[] args) {
 
     /* max length = 200, max height = 4 */
-    Human petya = new Human("Петя", getRandomRunRange(), getRandomJumpRange());
+    Human petya = new Human("Petya", getRandomRunRange(), getRandomJumpRange());
 
-    /* max length = 300, max height = 5 */
-    Cat murka = new Cat("Мурка", getRandomRunRange(), getRandomJumpRange());
+    /* max length = 500, max height = 5 */
+    Cat murka = new Cat("Murka", getRandomRunRange(), getRandomJumpRange());
 
     /* max length = 800, max height = 2 */
-    Robot bot = new Robot("МКБот", getRandomRunRange(), getRandomJumpRange());
+    Robot bot = new Robot("MKBot", getRandomRunRange(), getRandomJumpRange());
 
-    Treadmill runOne = new Treadmill();
-    Wall wallOne = new Wall();
+    Treadmill runObstacle = new Treadmill();
+    Wall wallObstacle = new Wall();
 
     List<Player> players = new ArrayList<>();
     List<Obstacle> obstacles = new ArrayList<>();
@@ -29,29 +31,32 @@ public class Main {
     players.add(murka);
     players.add(bot);
 
-    obstacles.add(runOne);
-    obstacles.add(wallOne);
+    obstacles.add(runObstacle);
+    obstacles.add(wallObstacle);
 
     for (Player player : players) {
 
-      if (player.run().contains("не")) {
+      if (!player.isPassRunObstacle()) {
         System.out.println(
-            player.run()
+            ANSI_RED
+                + player.run()
                 + obstacles.get(0).overcome(player.getLength())
-                + " и выбывает из соревнования!");
+                + " and drops out of the competition!");
         continue;
       } else {
-        System.out.println(player.run() + obstacles.get(0).overcome(player.getLength()));
+        System.out.println(
+            ANSI_GREEN + player.run() + obstacles.get(0).overcome(player.getLength()));
       }
 
-      if (player.jump().contains("не")) {
+      if (!player.isPassJumpObstacle()) {
         System.out.println(
-            player.jump()
+            ANSI_RED
+                + player.jump()
                 + obstacles.get(1).overcome(player.getHeight())
-                + " и выбывает из соревнования!");
-
+                + " and drops out of the competition!!");
       } else {
-        System.out.println(player.jump() + obstacles.get(1).overcome(player.getHeight()));
+        System.out.println(
+            ANSI_GREEN + player.jump() + obstacles.get(1).overcome(player.getHeight()));
       }
     }
   }

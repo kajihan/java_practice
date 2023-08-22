@@ -4,6 +4,6 @@ public class Treadmill extends Obstacle {
 
   @Override
   public String overcome(int range) {
-    return "беговую дорожку длиной" + " " + range + " " + "метров";
+    return "a treadmill" + " " + range + " " + "meters long";
   }
 }
