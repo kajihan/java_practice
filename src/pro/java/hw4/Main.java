@@ -3,15 +3,19 @@ package pro.java.hw4;
 import java.util.Random;
 
 public class Main {
+
   private static final Random random = new Random();
 
   public static void main(String[] args) {
-    Dog bobik = new Dog();
-    Cat murka = new Cat();
-    Animals iriska = new Cat();
+    Counter counter = new Counter();
+
+    Dog bobik = new Dog(counter);
+    Cat murka = new Cat(counter);
+    Animals iriska = new Cat(counter);
 
     bobik.run("Бобик", getRandomRunRange());
     bobik.swim("Бобик", getRandomSwimRange());
+
 
     murka.run("Мурка", getRandomRunRange());
     murka.swim("Мурка", getRandomSwimRange());
@@ -21,7 +25,9 @@ public class Main {
 
     System.out.printf(
         "Животных создано: %s\n" + "Собак создано: %s\n" + "Кошек создано: %s%n",
-        Animals.countObjects, Dog.countObjects, Cat.countObjects);
+        counter.getAnimalsCounter(),
+        counter.getDogsCounter(),
+        counter.getCatsCounter());
   }
 
   private static int getRandomRunRange() {

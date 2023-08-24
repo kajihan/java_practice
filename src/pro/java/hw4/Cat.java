@@ -2,10 +2,9 @@ package pro.java.hw4;
 
 public class Cat extends Animals {
 
-  protected static int countObjects;
-
-  public Cat() {
-    countObjects++;
+  public Cat(Counter counter) {
+    counter.animalIncrement();
+    counter.catIncrement();
   }
 
   @Override
