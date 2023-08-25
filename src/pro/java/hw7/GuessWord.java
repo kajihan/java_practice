@@ -1,6 +1,7 @@
 package pro.java.hw7;
 
 import java.util.Arrays;
+import java.util.Locale;
 import java.util.Scanner;
 
 public class GuessWord {
@@ -58,13 +59,13 @@ public class GuessWord {
 
     private boolean userWantsAnotherGame() {
         System.out.print("\nDo you want to start a new attempt?\nEnter y or n: ");
-        char gameCase = this.input.nextLine().charAt(0);
+        char gameCase = this.input.nextLine().toLowerCase(Locale.ROOT).charAt(0);
         return (gameCase == 'y');
     }
 
     private void guess() {
         System.out.print("Enter a letter or whole word to guess the answer: " + ANSI_CYAN + String.valueOf(currentWord) + ANSI_RESET + " ");
-        String guessWord = this.input.nextLine();
+        String guessWord = this.input.nextLine().toLowerCase(Locale.ROOT);
 
         if (guessWord.length() > 1) {
 
