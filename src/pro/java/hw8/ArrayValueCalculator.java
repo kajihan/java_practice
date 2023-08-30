@@ -39,12 +39,7 @@ public class ArrayValueCalculator {
             }
             return result;
         } catch (Exception e) {
-            try {
-                throw new ArrayDataException("Error processing array", e).getCause();
-            } catch (Throwable throwable) {
-                throwable.printStackTrace();
-            }
+            throw new ArrayDataException("Error processing array", e);
         }
-        return 0;
     }
 }
