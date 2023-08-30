@@ -33,12 +33,7 @@ public class ArrayValueCalculator {
                         int value = Integer.parseInt(valueStr);
                         result += value;
                     } catch (NumberFormatException e) {
-                        try {
-                            throw new ArrayDataException("Invalid value at element [" + i + "][" + j + "]", e);
-                        } catch (Throwable throwable) {
-                            throwable.printStackTrace();
-                            return 0;
-                        }
+                        throw new ArrayDataException("Invalid value at element [" + i + "][" + j + "]", e);
                     }
                 }
             }
