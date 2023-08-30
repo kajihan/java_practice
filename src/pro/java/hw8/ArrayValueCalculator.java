@@ -19,23 +19,37 @@ public class ArrayValueCalculator {
     }
 
     public static int doCalc(String[][] array) throws ArraySizeException, ArrayDataException {
-        if (array.length != 4 || array[0].length != 4) {
-            throw new ArraySizeException("Incorrect array size");
-        }
+        try {
+            if (array.length != 4 || array[0].length != 4) {
+                throw new ArraySizeException("Incorrect array size");
+            }
 
-        int result = 0;
+            int result = 0;
 
-        for (int i = 0; i < array.length; i++) {
-            for (int j = 0; j < array[i].length; j++) {
-                String valueStr = array[i][j];
-                try {
-                    int value = Integer.parseInt(valueStr);
-                    result += value;
-                } catch (NumberFormatException ex) {
-                    throw new ArrayDataException("Invalid value at element [" + i + "][" + j + "]");
+            for (int i = 0; i < array.length; i++) {
+                for (int j = 0; j < array[i].length; j++) {
+                    String valueStr = array[i][j];
+                    try {
+                        int value = Integer.parseInt(valueStr);
+                        result += value;
+                    } catch (NumberFormatException e) {
+                        try {
+                            throw new ArrayDataException("Invalid value at element [" + i + "][" + j + "]", e);
+                        } catch (Throwable throwable) {
+                            throwable.printStackTrace();
+                            return 0;
+                        }
+                    }
                 }
             }
+            return result;
+        } catch (Exception e) {
+            try {
+                throw new ArrayDataException("Error processing array", e).getCause();
+            } catch (Throwable throwable) {
+                throwable.printStackTrace();
+            }
         }
-        return result;
+        return 0;
     }
 }
