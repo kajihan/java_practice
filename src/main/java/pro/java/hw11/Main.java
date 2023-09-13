@@ -1,8 +1,14 @@
 package pro.java.hw11;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+import java.util.HashSet;
 
-import static pro.java.hw11.WordOccurrence.*;
+import static pro.java.hw11.WordOccurrence.findOccurrence;
+import static pro.java.hw11.WordOccurrence.printOccurrence;
 
 public class Main {
     public static void main(String[] args) {
@@ -19,7 +25,7 @@ public class Main {
 
         //Task 2
         Integer[] intArray = {1, 2, 3};
-        List<Integer> intList = ArrayToListConverter(intArray);
+        List<Integer> intList = arrayToListConverter(intArray);
         System.out.println("Array: " + Arrays.toString(intArray));
         System.out.println("List: " + intList);
 
@@ -61,7 +67,7 @@ public class Main {
         return count;
     }
 
-    public static <T> List<T> ArrayToListConverter(T[] array) {
+    public static <T> List<T> arrayToListConverter(T[] array) {
         List<T> list = new ArrayList<>();
         Collections.addAll(list, array);
         return list;

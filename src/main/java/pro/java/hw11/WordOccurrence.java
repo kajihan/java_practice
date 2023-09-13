@@ -32,7 +32,7 @@ class WordOccurrence implements Comparable<WordOccurrence> {
     public static void printOccurrence(List<WordOccurrence> result) {
         // Displaying the result with commas after each occurrence and nothing after the last
         for (WordOccurrence occurrence : result) {
-            if (occurrence == result.get(result.size() - 1)) {
+            if (occurrence.equals(result.get(result.size() - 1))) {
                 System.out.println(occurrence + "");
             } else {
                 System.out.println(occurrence + ",");
