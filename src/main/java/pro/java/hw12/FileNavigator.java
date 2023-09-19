@@ -46,9 +46,6 @@ public class FileNavigator {
     }
 
     public void remove(String filePath) {
-        for (List<FileData> list : filesMap.values()) {
-            list.removeIf(file -> file.getFilePath().equals(filePath));
-        }
         filesMap.remove(filePath);
         System.out.println("Folder '" + filePath + "' and its files have been removed");
     }
