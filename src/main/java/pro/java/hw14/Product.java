@@ -96,10 +96,10 @@ public class Product {
     public String toString() {
         return "Product{" +
                 "id=" + getId() +
-                ", type='" + type + '\'' +
-                ", price=" + price +
-                ", discount=" + discount +
-                ", creationDate=" + creationDate +
+                ", type='" + getType() + '\'' +
+                ", price=" + getPrice() +
+                ", discount=" + isDiscount() +
+                ", creationDate=" + getCreationDate() +
                 '}';
     }
 }
