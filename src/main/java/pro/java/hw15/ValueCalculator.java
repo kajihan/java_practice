@@ -33,7 +33,8 @@ public class ValueCalculator {
             thread1.join();
             thread2.join();
         } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
+            System.err.println("An error occurred: " + e.getMessage());
+            e.printStackTrace();
         }
 
         System.arraycopy(a1, 0, values, 0, halfSize);
