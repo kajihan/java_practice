@@ -1,9 +1,12 @@
 package pro.java.hw16;
 
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Main {
+    public static final int FUEL_CAPACITY = 100;
+
     public static void main(String[] args) {
         //Testing of ThreadSafeList functionality
         ThreadSafeList<Integer> threadSafeList = new ThreadSafeList<>();
@@ -14,11 +17,11 @@ public class Main {
         System.out.println("Element with number 1: " + threadSafeList.get(1));
         threadSafeList.remove(20);
 
-        System.out.println("Elements after deleted element 20: " + threadSafeList.get(0) + ", " + threadSafeList.get(1));
+        System.out.println("Elements after removing 20: " + threadSafeList.get(0) + ", " + threadSafeList.get(1));
         separateLogicalBlock();
 
         //Testing of PetrolStation functionality
-        PetrolStation petrolStation = new PetrolStation(100);
+        PetrolStation petrolStation = new PetrolStation(new AtomicInteger(FUEL_CAPACITY));
 
         for (int i = 0; i < 3; i++) {  //Running 3 threads that are trying to refuel at the same time
             int fuelAmount = (int) (Math.random() * 30) + 10;

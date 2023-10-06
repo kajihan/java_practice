@@ -1,31 +1,41 @@
 package pro.java.hw16;
 
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.atomic.AtomicInteger;
+
 public class PetrolStation {
-    private int amount;
 
-    public PetrolStation(int initialAmount) {
-        this.amount = initialAmount;
-    }
+    private static final String RESET = "\u001B[0m";
+    private static final String RED = "\u001B[31m";
+    private static final String GREEN = "\u001B[32m";
+    private static final String CYAN = "\u001B[36m";
+    private static final String BLUE = "\033[0;34m";
+    private final AtomicInteger stationFuelAmount;
 
-    public int getAmount() {
-        return amount;
+    public PetrolStation(AtomicInteger initialAmount) {
+        this.stationFuelAmount = initialAmount;
     }
 
     public synchronized void doRefuel(int fuelAmount) {
-        if (fuelAmount > getAmount()) {
-            System.out.println("Not enough fuel in the station!");
-            return;
+        try {
+            if (fuelAmount > stationFuelAmount.get()) {
+                throw new IllegalArgumentException();
+            }
+
+            int refuelTime = getRandomRefuelTime();
+            sleep(refuelTime);
+
+            decreaseAmount(fuelAmount);
+            System.out.println(GREEN + "Refueled " + fuelAmount + " litres of fuel, remaining fuel in station: " + RESET
+                    + BLUE + stationFuelAmount.get() + RESET);
+        } catch (IllegalArgumentException e) {
+            System.out.println(CYAN + Thread.currentThread().getName() + RESET + ": "
+                    + RED + "Not enough fuel at the station to refuel!" + RESET);
         }
-
-        int refuelTime = getRandomRefuelTime();
-        sleep(refuelTime * 1000);
-
-        decreaseAmount(fuelAmount);
-        System.out.println("Refueled " + fuelAmount + " litres of fuel, remaining fuel in station: " + getAmount());
     }
 
     private int getRandomRefuelTime() {
-        return (int) (Math.random() * 8) + 3;
+        return ThreadLocalRandom.current().nextInt(3, 11) * 1000;
     }
 
     private void sleep(int milliseconds) {
@@ -37,6 +47,6 @@ public class PetrolStation {
     }
 
     private void decreaseAmount(int fuelAmount) {
-        amount -= fuelAmount;
+        stationFuelAmount.getAndAdd(-fuelAmount);
     }
 }
