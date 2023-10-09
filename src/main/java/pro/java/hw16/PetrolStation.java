@@ -47,6 +47,6 @@ public class PetrolStation {
     }
 
     private void decreaseAmount(int fuelAmount) {
-        stationFuelAmount.getAndAdd(-fuelAmount);
+        stationFuelAmount.updateAndGet(amount -> amount - fuelAmount);
     }
 }
