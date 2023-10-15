@@ -1,0 +1,5 @@
+FILE=current_log.txt
+LEVEL=DEBUG
+MAX-SIZE=50000
+FORMAT=dd.MM.yyyy-HH꞉mm꞉ss
+LOG-TO-CONSOLE=false
