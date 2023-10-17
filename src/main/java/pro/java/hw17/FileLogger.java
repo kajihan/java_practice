@@ -11,7 +11,7 @@ import java.nio.file.StandardCopyOption;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class FileLogger {
+public class FileLogger implements AutoCloseable {
     private static final String RESET = "\u001B[0m";
     private static final String RED = "\u001B[31m";
     private static final String GREEN = "\u001B[32m";
@@ -51,22 +51,24 @@ public class FileLogger {
                 writer = new PrintWriter(new FileWriter(currentFileName, true));
                 currentFileSize = 0;
                 currentFileName = newFilePath;
-
-                String errorMessage = "Maximum file size reached or exceeded!";
-                String limitMessage = "Log file size limit: " + config.getMaxSize() + " bytes";
-                String beforeRotationMessage = "Log file size before creating a new one: " + fileSizeBeforeRotation + " bytes";
-                String newLogFileMessage = "New log file created: " + currentFileName;
-                String newPathMessage = GREEN + "Path to the new log file: " + ARROW + newPath.toAbsolutePath() + RESET;
-                throw new FileMaxSizeReachedException(errorMessage, limitMessage, beforeRotationMessage, newLogFileMessage, newPathMessage);
+                Result result = getResult(fileSizeBeforeRotation, newPath);
+                throw new FileMaxSizeReachedException(result.errorMessage, result.limitMessage,
+                        result.beforeRotationMessage, result.newLogFileMessage, result.newPathMessage);
             } catch (IOException e) {
-                String errorMessage = "Error creating a new log file: " + e.getMessage();
-                String limitMessage = "Log file size limit: " + config.getMaxSize() + " bytes";
-                String beforeRotationMessage = "Log file size before creating a new one: " + fileSizeBeforeRotation + " bytes";
-                String failedLogMessage = "Failed to create a new log file.";
-                String failedLogPathMessage = GREEN + "Path to the failed log file: " + ARROW + Paths.get(currentFileName).toAbsolutePath() + RESET;
-                throw new FileMaxSizeReachedException(errorMessage, limitMessage, beforeRotationMessage, failedLogMessage, failedLogPathMessage);
+                ExceptionResult exceptionResult = getExceptionResult(e, fileSizeBeforeRotation);
+                throw new FileMaxSizeReachedException(exceptionResult.errorMessage, exceptionResult.limitMessage,
+                        exceptionResult.beforeRotationMessage, exceptionResult.failedLogMessage, exceptionResult.failedLogPathMessage);
             }
         }
+    }
+
+    private ExceptionResult getExceptionResult(IOException e, long fileSizeBeforeRotation) {
+        String errorMessage = "Error creating a new log file: " + e.getMessage();
+        String limitMessage = "Log file size limit: " + config.getMaxSize() + " bytes";
+        String beforeRotationMessage = "Log file size before creating a new one: " + fileSizeBeforeRotation + " bytes";
+        String failedLogMessage = "Failed to create a new log file.";
+        String failedLogPathMessage = GREEN + "Path to the failed log file: " + ARROW + Paths.get(currentFileName).toAbsolutePath() + RESET;
+        return new ExceptionResult(errorMessage, limitMessage, beforeRotationMessage, failedLogMessage, failedLogPathMessage);
     }
 
     private String getTimestamp() {
@@ -88,53 +90,45 @@ public class FileLogger {
         }
     }
 
-    public void warning(String message) {
-        try {
-            if (config.isLogToConsole()) {
-                String logMessage = "[" + getTimestamp() + "][" + LoggingLevel.WARN + "] " + "Message: " + message;
-                System.out.println(logMessage);
-            } else {
-                log(message, LoggingLevel.WARN);
+    public void print(boolean isLogToConsole, LoggingLevel level, String message) {
+        if (shouldLog(level)) {
+            try {
+                if (isLogToConsole) {
+                    String logMessage = formatLogMessage(level, message);
+                    System.out.println(logMessage);
+                } else {
+                    log(message, level);
+                }
+            } catch (FileMaxSizeReachedException e) {
+                displayFileMaxSizeMessages(e);
+            } catch (IOException e) {
+                logErrorMessage(level.toString(), message);
             }
-        } catch (FileMaxSizeReachedException e) {
-            displayFileMaxSizeMessages(e);
-        } catch (IOException e) {
-            System.err.println("Error occurred while logging WARNING message: " + message);
         }
     }
 
     public void info(String message) {
-        if (LoggingLevel.INFO.ordinal() <= config.getLogLevel().ordinal()) {
-            try {
-                if (config.isLogToConsole()) {
-                    String logMessage = "[" + getTimestamp() + "][" + LoggingLevel.INFO + "] " + "Message: " + message;
-                    System.out.println(logMessage);
-                } else {
-                    log(message, LoggingLevel.INFO);
-                }
-            } catch (FileMaxSizeReachedException e) {
-                displayFileMaxSizeMessages(e);
-            } catch (IOException e) {
-                System.err.println("Error occurred while logging INFO message: " + message);
-            }
-        }
+        print(config.isLogToConsole(), LoggingLevel.INFO, message);
     }
 
     public void debug(String message) {
-        if (LoggingLevel.DEBUG.ordinal() <= config.getLogLevel().ordinal()) {
-            try {
-                if (config.isLogToConsole()) {
-                    String logMessage = "[" + getTimestamp() + "][" + LoggingLevel.DEBUG + "] " + "Message: " + message;
-                    System.out.println(logMessage);
-                } else {
-                    log(message, LoggingLevel.DEBUG);
-                }
-            } catch (FileMaxSizeReachedException e) {
-                displayFileMaxSizeMessages(e);
-            } catch (IOException e) {
-                System.err.println("Error occurred while logging DEBUG message: " + message);
-            }
-        }
+        print(config.isLogToConsole(), LoggingLevel.DEBUG, message);
+    }
+
+    public void warning(String message) {
+        print(config.isLogToConsole(), LoggingLevel.WARN, message);
+    }
+
+    private boolean shouldLog(LoggingLevel level) {
+        return level.ordinal() <= config.getLogLevel().ordinal();
+    }
+
+    private String formatLogMessage(LoggingLevel level, String message) {
+        return "[" + getTimestamp() + "][" + level + "] " + "Message: " + message;
+    }
+
+    private void logErrorMessage(String level, String message) {
+        System.err.println("Error occurred while logging " + level + " message: " + message);
     }
 
     private void displayFileMaxSizeMessages(FileMaxSizeReachedException e) {
@@ -145,9 +139,51 @@ public class FileLogger {
         System.out.println(e.getNewLogFilePathMessage());
     }
 
+    @Override
     public void close() {
-        if (writer != null) {
-            writer.close();
+        if (writer != null) writer.close();
+    }
+
+    private Result getResult(long fileSizeBeforeRotation, Path newPath) {
+        String errorMessage = "Maximum file size reached or exceeded!";
+        String limitMessage = "Log file size limit: " + config.getMaxSize() + " bytes";
+        String beforeRotationMessage = "Log file size before creating a new one: " + fileSizeBeforeRotation + " bytes";
+        String newLogFileMessage = "New log file created: " + currentFileName;
+        String newPathMessage = GREEN + "Path to the new log file: " + ARROW + newPath.toAbsolutePath() + RESET;
+        return new Result(errorMessage, limitMessage, beforeRotationMessage, newLogFileMessage, newPathMessage);
+    }
+
+    private static class Result {
+        public final String errorMessage;
+        public final String limitMessage;
+        public final String beforeRotationMessage;
+        public final String newLogFileMessage;
+        public final String newPathMessage;
+
+        public Result(String errorMessage, String limitMessage, String beforeRotationMessage,
+                      String newLogFileMessage, String newPathMessage) {
+            this.errorMessage = errorMessage;
+            this.limitMessage = limitMessage;
+            this.beforeRotationMessage = beforeRotationMessage;
+            this.newLogFileMessage = newLogFileMessage;
+            this.newPathMessage = newPathMessage;
+        }
+    }
+
+    private static class ExceptionResult {
+        public final String errorMessage;
+        public final String limitMessage;
+        public final String beforeRotationMessage;
+        public final String failedLogMessage;
+        public final String failedLogPathMessage;
+
+        public ExceptionResult(String errorMessage, String limitMessage, String beforeRotationMessage,
+                               String failedLogMessage, String failedLogPathMessage) {
+            this.errorMessage = errorMessage;
+            this.limitMessage = limitMessage;
+            this.beforeRotationMessage = beforeRotationMessage;
+            this.failedLogMessage = failedLogMessage;
+            this.failedLogPathMessage = failedLogPathMessage;
         }
     }
 }
