@@ -11,9 +11,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LessonDao implements AutoCloseable {
-    Connection connection;
-
+public class LessonDao {
     public void addLesson(Lesson lesson) {
         try (Connection connection = DataBaseConnection.getConnection()) {
             if (connection == null) {
@@ -104,16 +102,5 @@ public class LessonDao implements AutoCloseable {
             System.out.println(e.getMessage());
         }
         return lesson;
-    }
-
-    @Override
-    public void close() {
-        if (connection != null) {
-            try {
-                connection.close();
-            } catch (SQLException e) {
-                System.out.println(e.getMessage());
-            }
-        }
     }
 }

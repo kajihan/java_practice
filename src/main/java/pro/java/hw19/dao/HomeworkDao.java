@@ -10,9 +10,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HomeworkDao implements AutoCloseable {
-    Connection connection;
-
+public class HomeworkDao {
     public void addHomework(Homework homework) {
         try (Connection connection = DataBaseConnection.getConnection()) {
             if (connection == null) {
@@ -51,17 +49,6 @@ public class HomeworkDao implements AutoCloseable {
             System.out.println(e.getMessage());
         }
         return homeworkList;
-    }
-
-    @Override
-    public void close() {
-        if (connection != null) {
-            try {
-                connection.close();
-            } catch (SQLException e) {
-                System.out.println(e.getMessage());
-            }
-        }
     }
 }
 
