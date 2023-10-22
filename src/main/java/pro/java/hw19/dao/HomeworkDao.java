@@ -11,42 +11,38 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HomeworkDao {
-    public void addHomework(Homework homework) {
-        try (Connection connection = DataBaseConnection.getConnection()) {
-            if (connection == null) {
-                return;
-            }
+    private final Connection connection;
 
-            String sql = "INSERT INTO Homework (name, description) VALUES (?, ?)";
-            try (PreparedStatement statement = connection.prepareStatement(sql)) {
-                statement.setString(1, homework.getName());
-                statement.setString(2, homework.getDescription());
-                statement.executeUpdate();
-            }
+    public HomeworkDao() {
+        this.connection = DataBaseConnection.getConnection();
+    }
+
+    public void addHomework(Homework homework) {
+        String sql = "INSERT INTO Homework (name, description) VALUES (?, ?)";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, homework.getName());
+            statement.setString(2, homework.getDescription());
+            statement.executeUpdate();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
+            throw new RuntimeException(e);
         }
     }
 
     public List<Homework> getAllHomework() {
         List<Homework> homeworkList = new ArrayList<>();
-        try (Connection connection = DataBaseConnection.getConnection()) {
-            if (connection == null) {
-                return homeworkList;
-            }
-
-            String sql = "SELECT * FROM Homework";
-            try (PreparedStatement statement = connection.prepareStatement(sql);
-                 ResultSet resultSet = statement.executeQuery()) {
-                while (resultSet.next()) {
-                    String name = resultSet.getString("name");
-                    String description = resultSet.getString("description");
-                    Homework homework = new Homework(name, description);
-                    homeworkList.add(homework);
-                }
+        String sql = "SELECT * FROM Homework";
+        try (PreparedStatement statement = connection.prepareStatement(sql);
+             ResultSet resultSet = statement.executeQuery()) {
+            while (resultSet.next()) {
+                String name = resultSet.getString("name");
+                String description = resultSet.getString("description");
+                Homework homework = new Homework(name, description);
+                homeworkList.add(homework);
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
+            throw new RuntimeException(e);
         }
         return homeworkList;
     }
