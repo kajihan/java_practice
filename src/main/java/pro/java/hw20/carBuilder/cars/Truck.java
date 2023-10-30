@@ -1,48 +1,23 @@
 package pro.java.hw20.carBuilder.cars;
 
 import pro.java.hw20.carBuilder.Car;
-import pro.java.hw20.carBuilder.CarBuilder;
 import pro.java.hw20.carBuilder.Transmission;
 
-public class Truck implements CarBuilder {
-    private final Car car;
+public class Truck extends Car {
+    private final int capacity;
 
-    public Truck() {
-        car = new Car();
+    public Truck(String model, String engine, String body, String wheels, Transmission transmission, int capacity) {
+        super(model, engine, body, wheels, transmission);
+        this.capacity = capacity;
     }
 
     @Override
-    public CarBuilder buildModel(String model) {
-        car.setModel(model);
-        return this;
+    public String toString() {
+        return super.toString() + "\n" +
+                "Capacity: " + getCapacity();
     }
 
-    @Override
-    public CarBuilder buildEngine(String engine) {
-        car.setEngine(engine);
-        return this;
-    }
-
-    @Override
-    public CarBuilder buildBody(String body) {
-        car.setBody(body);
-        return this;
-    }
-
-    @Override
-    public CarBuilder buildWheels(String wheels) {
-        car.setWheels(wheels);
-        return this;
-    }
-
-    @Override
-    public CarBuilder buildTransmission(Transmission transmission) {
-        car.setTransmission(transmission);
-        return this;
-    }
-
-    @Override
-    public Car build() {
-        return car;
+    public int getCapacity() {
+        return capacity;
     }
 }

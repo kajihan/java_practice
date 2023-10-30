@@ -12,25 +12,34 @@ import static pro.java.hw20.carBuilder.Transmission.MANUAL;
 
 public class Main {
     public static void main(String[] args) {
-        Car sportsCar = new Sports()
-                .buildModel("Ferrari F8 Tribute")
-                .buildEngine("Powerful engine for sports car")
-                .buildBody("Sports car body")
-                .buildWheels("Sports car wheels")
-                .buildTransmission(AUTOMATIC)
+        Car renault = Car.builder()
+                .model("Renault Megan")
+                .engine("Standard engine")
+                .body("Standard car body")
+                .wheels("Standard car wheels")
+                .transmission(MANUAL)
                 .build();
-
-        Car truckCar = new Truck()
-                .buildModel("Ford F150 Raptor")
-                .buildEngine("Powerful engine for truck")
-                .buildBody("Heavy truck body")
-                .buildWheels("Large truck wheels")
-                .buildTransmission(MANUAL)
-                .build();
-
-        sportsCar.showInfo();
+        System.out.println(renault.toString());
         separateLogicalBlock();
-        truckCar.showInfo();
+
+        Sports ferrari = Car.builder()
+                .model("Ferrari F8")
+                .engine("Powerful engine")
+                .body("Sports car body")
+                .wheels("Sports car wheels")
+                .transmission(AUTOMATIC)
+                .buildSportsCar("Engine for speed racing");
+        System.out.println(ferrari.toString());
+        separateLogicalBlock();
+
+        Truck ford = Car.builder()
+                .model("Ford F150")
+                .engine("Powerful engine for truck")
+                .body("Heavy truck body")
+                .wheels("Large truck wheels")
+                .transmission(MANUAL)
+                .buildTruckCar(1000);
+        System.out.println(ford.toString());
     }
 
     private static void separateLogicalBlock() {
