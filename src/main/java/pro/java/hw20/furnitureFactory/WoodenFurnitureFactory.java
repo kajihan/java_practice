@@ -1,15 +1,19 @@
 package pro.java.hw20.furnitureFactory;
 
-public class WoodenFurnitureFactory {
-    public WoodenFurniture createTable() {
-        return new WoodenTable();
-    }
+public class WoodenFurnitureFactory extends FurnitureFactory {
 
-    public WoodenFurniture createChair() {
+    @Override
+    public Furniture createChair() {
         return new WoodenChair();
     }
 
-    public WoodenFurniture createShelf() {
+    @Override
+    public Furniture createTable() {
+        return new WoodenTable();
+    }
+
+    @Override
+    public Furniture createShelf() {
         return new WoodenShelf();
     }
 }
