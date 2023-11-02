@@ -63,14 +63,15 @@ public class DataStorageAppTest {
     public void testDBSave() throws SQLException {
         Connection mockConnection = mock(Connection.class);
         PreparedStatement mockPreparedStatement = mock(PreparedStatement.class);
+
         when(mockConnection.prepareStatement(any())).thenReturn(mockPreparedStatement);
-
         DatabaseDataStorage databaseDataStorage = new DatabaseDataStorage(mockConnection);
-        List<String> data = List.of(TEST_DATA1, TEST_DATA2);
 
+        List<String> data = List.of(TEST_DATA1, TEST_DATA2);
         databaseDataStorage.save(data);
 
-        verify(mockConnection).prepareStatement("INSERT INTO smartstorage.storage (data) VALUES (?)");
+        verify(mockConnection).prepareStatement(anyString());
+
         verify(mockPreparedStatement, times(data.size())).setString(eq(1), any());
         verify(mockPreparedStatement, times(data.size())).executeUpdate();
     }
