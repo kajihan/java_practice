@@ -54,6 +54,7 @@ public class DataStorageAppTest {
         List<String> savedData;
         try (BufferedReader reader = new BufferedReader(new FileReader(testFile))) {
             savedData = reader.lines().collect(Collectors.toList());
+            System.out.println("Saved data in file: " + savedData);
         }
 
         assertEquals(testData, savedData);
