@@ -1,4 +1,4 @@
-package pro.java.hw23;
+package pro.java.hw22;
 
 import java.io.IOException;
 import java.util.List;

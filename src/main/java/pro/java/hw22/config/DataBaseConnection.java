@@ -1,4 +1,4 @@
-package pro.java.hw23.config;
+package pro.java.hw22.config;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

@@ -1,7 +1,7 @@
-package pro.java.hw23.storages.db_storage;
+package pro.java.hw22.storages.db_storage;
 
-import pro.java.hw23.DataStorage;
-import pro.java.hw23.config.DataBaseConnection;
+import pro.java.hw22.DataStorage;
+import pro.java.hw22.config.DataBaseConnection;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
