@@ -1,6 +1,6 @@
-package pro.java.hw23.storages.collection_storage;
+package pro.java.hw22.storages.collection_storage;
 
-import pro.java.hw23.DataStorage;
+import pro.java.hw22.DataStorage;
 
 import java.util.ArrayList;
 import java.util.List;

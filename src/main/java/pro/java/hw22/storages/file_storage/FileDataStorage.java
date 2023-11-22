@@ -1,6 +1,6 @@
-package pro.java.hw23.storages.file_storage;
+package pro.java.hw22.storages.file_storage;
 
-import pro.java.hw23.DataStorage;
+import pro.java.hw22.DataStorage;
 
 import java.io.FileWriter;
 import java.io.IOException;

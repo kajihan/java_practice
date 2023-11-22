@@ -1,12 +1,12 @@
-package pro.java.hw23;
+package pro.java.hw22;
 
 
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
-import pro.java.hw23.storages.collection_storage.InMemoryDataStorage;
-import pro.java.hw23.storages.db_storage.DatabaseDataStorage;
-import pro.java.hw23.storages.file_storage.FileDataStorage;
+import pro.java.hw22.storages.collection_storage.InMemoryDataStorage;
+import pro.java.hw22.storages.db_storage.DatabaseDataStorage;
+import pro.java.hw22.storages.file_storage.FileDataStorage;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
